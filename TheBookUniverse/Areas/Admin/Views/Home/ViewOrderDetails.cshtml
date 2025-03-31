@@ -1,0 +1,103 @@
+﻿@using Models.Orders
+@model OrderModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Order details";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="row justify-content-center">
+                <h3>Order details</h3>
+                <hr />
+                <div class="row">
+                    <div class="col-lg-6 col-12">
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="FirstName" class="form-control" disabled />
+                            <label asp-for="FirstName" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="LastName" class="form-control" disabled />
+                            <label asp-for="LastName" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="Email" class="form-control" disabled />
+                            <label asp-for="Email" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating my-2">
+                            <input asp-for="DateCreated" class="form-control" disabled />
+                            <label asp-for="DateCreated" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating my-2">
+                            <input asp-for="Price" value="$@Model.Price" class="form-control" disabled />
+                            <label asp-for="Price" class="control-label mx-2"></label>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-12">
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="Address" class="form-control" disabled />
+                            <label asp-for="Address" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="City" class="form-control" disabled />
+                            <label asp-for="City" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating mt-2">
+                            <input asp-for="PostalCode" class="form-control" disabled />
+                            <label asp-for="PostalCode" class="control-label mx-2"></label>
+                        </div>
+                        <div class="form-group form-floating my-2">
+                            <input asp-for="Country" class="form-control" disabled />
+                            <label asp-for="Country" class="control-label mx-2"></label>
+                        </div>
+
+                        @if (Model.Sent)
+                        {
+                            <div class="form-group form-floating my-2">
+                                <input type="text" value="Sent" class="form-control text-success fw-bold" disabled />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-group form-floating my-2">
+                                <input type="text" value="Not sent" class="form-control text-danger fw-bold" disabled />
+                            </div>
+
+                        }
+                    </div>
+                </div>
+                <div class="row w-auto">
+                    @if(!Model.Sent)
+                        @Html.ActionLink("Mark as sent", "MarkAsSent", new { id = Model.Id }, new { @class="btn form-btn" } )
+
+                </div> 
+                <div class="row justify-content-center">
+                    <div class="col-xl-4 col-lg-6 col-md-8 col-sm-10">
+                        @foreach (var book in Model.Items)
+                        {
+                            <div class="row m-2">
+                                <div class="col-auto me-2">
+                                    <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Book.Id, area = "Common" })">
+                                        <img src="@Url.Content(book.Book.PictureURL)" alt="@book.Book.Title" class="book-img-xs" title="@book.Book.Title">
+                                    </a>
+                                </div>
+                                <div class="col ms-2">
+                                    <p class="m-0 p-0">@book.Book.Title </p>
+                                    <p class="m-0 p-0">(@book.Book.AuthorName) </p>
+                                    <p class="m-0 p-0">$@book.Book.Price </p>
+                                    <p class="m-0 p-0">Amount: @book.Quantity </p>
+
+                                </div>
+                            </div>
+                            <hr />
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

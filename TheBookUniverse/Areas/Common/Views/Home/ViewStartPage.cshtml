@@ -1,0 +1,131 @@
+﻿@using Models.Shared
+@model StartPageModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Welcome";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10">
+            <div class="row d-flex justify-content-center">
+                <div id="startPageCarousel" class="carousel slide mt-3" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        @for (int i = 0; i < Model.BannerImages.Count; i++)
+                        {
+                            var banner = Model.BannerImages[i];
+                            <div class="carousel-item @(i == 0 ? "active" : "")" data-bs-interval="5000">
+                                <img src="@Url.Content(banner.PictureURL)" class="d-block w-100" />
+                            </div>
+                        }
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#startPageCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#startPageCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+            <div class="row p-1 m-3">
+                <div class="col-12 m-3 mb-auto mx-auto">
+                    <h2>Popular books</h2>
+                    <hr />
+                    @foreach (var genre in Model.BooksPerGenres)
+                    {
+                        <p class="bg-dark text-white p-2 fw-bold mb-0">@genre.Key</p>
+                        <hr />
+                        <div class="slider">
+                            @foreach (var book in genre.Value)
+                            {
+                                <div class="d-flex m-2 flex-column book-item">
+                                    <div>
+                                        <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Id })" title="@book.Title">
+                                            <img src="@Url.Content(book.PictureURL)" alt="@book.Title" class=" book-img">
+                                        </a>
+                                        <span class="text-dark fw-bold font-14">@book.Title</span>
+                                        <br />
+                                        <a class="text-decoration-none text-dark" href="@Url.Action("ViewAuthorDetails", "Home", new { id = book.AuthorId })" title="@book.AuthorName">
+                                            <span class="fst-italic font-12">@book.AuthorName</span>
+                                        </a>
+                                    </div>
+                                    <div class="book-actions">
+                                        <span class="fw-bolder font-12">@("$" + book.Price)</span>
+                                        <br />
+                                        @if (User.IsInRole("User"))
+                                        {
+                                            if (book.Inventory == 0)
+                                            {
+                                                <span class="text-secondary"><em>Currently unavailable</em></span>
+                                            }
+                                            else
+                                            {
+                                                <a asp-action="AddBookToCart" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">Add to cart</a>
+                                                <a asp-action="AddBookToFavorites" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">Add to favorites</a>
+                                            }
+                                        }
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <hr />
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('.slider').each(function () {
+                $(this).slick({
+                    slidesToShow: 5,
+                    slidesToScroll: 1,
+                    arrows: true,
+                    dots: false,
+                    infinite: true,
+                    speed: 300,
+                    prevArrow: "<button type='button' class='slick-prev'>Previous</button>",
+                    nextArrow: "<button type='button' class='slick-next'>Next</button>",
+                    responsive: [
+                        {
+                            breakpoint: 1200,
+                            settings: {
+                                slidesToShow: 4,
+                                slidesToScroll: 1,
+                                infinite: true,
+                            }
+                        },
+                        {
+                            breakpoint: 1024,
+                            settings: {
+                                slidesToShow: 3,
+                                slidesToScroll: 1,
+                            }
+                        },
+                        {
+                            breakpoint: 700,
+                            settings: {
+                                slidesToShow: 2, 
+                                slidesToScroll: 1
+                            }
+                        },
+                        {
+                            breakpoint: 500,
+                            settings: {
+                                slidesToShow: 1, 
+                                slidesToScroll: 1
+                            }
+                        }
+                    ]
+                });
+            });
+        });
+
+    </script>
+}

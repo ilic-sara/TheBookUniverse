@@ -1,0 +1,82 @@
+﻿@using Models.Orders
+@model CartModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "My cart";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-10 col-sm-12 d-flex justify-content-center">
+            <div class="row justify-content-center">
+            <h3>My cart</h3>
+            @if (Model is null || Model.CartItems.Count == 0)
+            {
+                <hr />
+                <h5 class="fst-italic">Your cart is empty</h5>
+            }
+            else{
+                <div class="row border border-1 border-secondary rounded mb-4 p-2 bg-white">
+                    <form asp-action="AddOrderInformation" method="get">
+                    @{
+                        decimal totalPrice = 0;
+                    }
+                    @foreach (var item in Model.CartItems)
+                    {
+                        totalPrice += item.Book.Price * item.Quantity;
+                        int maxAmount = item.Book.Inventory > 50 ? 50 : item.Book.Inventory;
+                        <div class="row m-4">
+                            <div class="col-auto align-content-center me-2">
+                                <a href="@Url.Action("ViewBookDetails", "Home", new { id = item.Book.Id, area = "Common" })">
+                                    <img src="@Url.Content(item.Book.PictureURL)" alt="@item.Book.Title" class="book-img-xs">
+                                </a>
+                            </div>
+                            <div class="col w-auto align-content-center ms-2">
+                                    <p class="m-0 p-0">@item.Book.Title </p>
+                                    <p class="m-0 p-0">(@item.Book.AuthorName) </p>
+                                    <p class="m-0 p-0">$@item.Book.Price </p>
+                                    <p class="m-0 p-0">Amount: </p>
+                                    <input type="number" id="@item.Book.Id" name="numberOfCopies" value="@item.Quantity" onchange="updateNumber('@item.Book.Id', '@item.Book.Price')" style="width:50px" min="1" max="@maxAmount">
+                                    <br />
+                                    @Html.ActionLink("Remove", "RemoveBookFromCart", new { id = item.Book.Id })
+
+                            </div>
+                            
+                        </div>
+                        <hr />
+                    }
+                    
+                    <div class="text-center">
+            
+                            <h5>Total price: $<span id="totalPrice">@totalPrice</span></h5>
+                            <button type="submit" class="btn form-btn">Place order</button>
+            
+                    </div>
+                    </form>
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+</div>
+    <script>
+        function updateNumber(bookId, price) {
+            var newValue = document.getElementById(bookId).value;
+            $.ajax({
+                type: "POST",
+                url: "/User/Home/UpdateBookAmount",
+                data: { bookId: bookId, newValue: newValue, price: price },
+                success: function (response) {
+                    var priceElement = document.getElementById("totalPrice");
+                    var oldValue = parseFloat(priceElement.innerHTML);
+                    var responseValue = parseFloat(response);
+                    priceElement.innerHTML = responseValue.toFixed(2);
+                },
+                error: function (xhr, status, error) {
+                    alert("Error");
+                }
+            });
+        }
+    </script>

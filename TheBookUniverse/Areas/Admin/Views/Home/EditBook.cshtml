@@ -1,0 +1,128 @@
+﻿@using Models.Books
+@model BookModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Edit book";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-4">
+            <div class="row">
+                <form asp-action="EditBook" method="post">
+                    @Html.AntiForgeryToken()
+                    <h3>Edit book</h3>
+                    @if (TempData["ResponseMessage"] is not null && TempData["Response"] is not null && TempData["Response"].Equals(false))
+                    {
+                        <div class="text-center text-danger">
+                            @TempData["ResponseMessage"]
+                        </div>
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group form-floating">
+                        <input asp-for="Title" class="form-control" />
+                        <label asp-for="Title" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Title" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <textarea rows="4" asp-for="Description" class="form-control text-auto"></textarea>
+                        <label asp-for="Description" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        @Html.DropDownListFor(model => model.Language,
+                        new SelectList(ViewBag.Languages),
+                        "Select a language",
+                        new { @class = "form-select", id="Language" })
+
+                        <label asp-for="Language" class="control-label text-secondary">Language:</label>
+                        <span asp-validation-for="Language" class="text-danger"></span>
+                        <input type="hidden" id="Language" asp-for="Language" />
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="PublishedYear" class="form-control" />
+                        <label asp-for="PublishedYear" class="control-label text-secondary"></label>
+                        <span asp-validation-for="PublishedYear" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        @Html.DropDownListFor(model => model.AuthorId,
+                        new SelectList(ViewBag.Authors, "Key", "Value"),
+                        "Select an author",
+                        new { @class = "form-select", id="Author" })
+
+                        <label asp-for="AuthorId" class="control-label text-secondary">Author:</label>
+                        <span asp-validation-for="AuthorId" class="text-danger"></span>
+                        <input type="hidden" id="AuthorName" asp-for="AuthorName" />
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="Price" class="form-control" />
+                        <label asp-for="Price" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="NumberOfPages" class="form-control" />
+                        <label asp-for="NumberOfPages" class="control-label text-secondary"></label>
+                        <span asp-validation-for="NumberOfPages" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="Inventory" class="form-control" />
+                        <label asp-for="Inventory" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Inventory" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <textarea rows="4" asp-for="PictureURL" class="form-control text-auto"></textarea>
+                        <label asp-for="PictureURL" class="control-label text-secondary"></label>
+                        <span asp-validation-for="PictureURL" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group col text-start">
+                        <label asp-for="Genres" class="control-label text-dark"></label>
+                        <div class="border-1 border rounded p-2 bg-white">
+                            @foreach (var item in ViewBag.Genres)
+                            {
+                                var isChecked = Model.Genres.Contains(item);
+
+                                <div class="form-check">
+                                    <input class="form-check-input border-secondary" type="checkbox" name="Genres" value="@item" id="@item" @(isChecked ? "checked" : "")>
+                                    <label class="form-check-label text-secondary" for="@item">
+                                        @item
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn form-btn" />
+                        <a href="@Url.Action("GetBooksToDisplay", "Home", new { area = "Common"})" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const authorSelect = document.getElementById("Author");
+    authorSelect.addEventListener("change", function () {
+        const selectedAuthorName = authorSelect.options[authorSelect.selectedIndex].text;
+        document.getElementById("AuthorName").value = selectedAuthorName;
+    });
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

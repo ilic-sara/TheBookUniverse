@@ -1,0 +1,56 @@
+﻿@using Models.Admin
+@model BannerImageModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Edit banner image";
+}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-4">
+            <div class="row">
+                <form asp-action="EditBannerImage" method="post">
+                    @Html.AntiForgeryToken()
+                    <h3>Edit banner image</h3>
+                    @if (TempData["ResponseMessage"] is not null && TempData["Response"] is not null)
+                    {
+                        if (TempData["Response"].Equals(false))
+                        {
+                            <div class="text-center text-danger">
+                                @TempData["ResponseMessage"]
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-success">
+                                @TempData["ResponseMessage"]
+                            </div>
+                        }
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @Html.HiddenFor(model => model.Id)
+
+                    <div class="form-group form-floating">
+                        <textarea rows="4" asp-for="PictureURL" class="form-control text-auto"></textarea>
+                        <label asp-for="PictureURL" class="control-label text-secondary"></label>
+                        <span asp-validation-for="PictureURL" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn form-btn" />
+                        <a href="@Url.Action("ViewBannerImages")" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

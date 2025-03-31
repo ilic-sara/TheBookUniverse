@@ -1,0 +1,52 @@
+﻿@using Models.Admin
+@model FilterOptionsModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Filter option details";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-4">
+            <div class="row">
+                <h3>Filter option details</h3>
+                <hr />
+
+                @Html.HiddenFor(model => model.Id)
+                <form>
+                    <div class="form-group form-floating">
+                        <input asp-for="Name" class="form-control" />
+                        <label asp-for="Name" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating" id="values-container">
+                        <div class="form-group input-group" id="added-values">
+                            <label class="control-label text-secondary">Values:</label>
+                            @foreach (var val in Model.Values)
+                            {
+
+                                <div class="input-group mb-3">
+                                    <input type="text" name="Values" class="form-control" value="@val">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div class="row justify-content-center my-3">
+                        <div class="col">
+                            @Html.ActionLink("Edit", "EditFilterOption", new { id = Model.Id }, new { @class = "btn btn-dark" })
+                        </div>
+                        <div class="col">
+                            @Html.ActionLink("Delete", "DeleteFilterOption", new { id = Model.Id }, new { @class = "btn btn-danger" })
+                        </div>
+                        <div class="col">
+                            @Html.ActionLink("Cancel", "ViewFilterOptions", new { id = Model.Id }, new { @class = "btn btn-secondary" })
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

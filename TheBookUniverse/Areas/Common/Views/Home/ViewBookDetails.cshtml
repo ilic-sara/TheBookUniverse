@@ -1,0 +1,89 @@
+﻿@using Models.Books
+@model BookModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Book details";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <h3>@Model.Title</h3>
+            <a class="text-decoration-none" href="@Url.Action("ViewAuthorDetails", "Home", new { id = Model.AuthorId })" title="@Model.AuthorName">
+                <h6>@Model.AuthorName</h6>
+            </a>
+            <hr />
+            @if (User.IsInRole("Admin") && TempData["ResponseMessage"] is not null && TempData["Response"] is not null && TempData["Response"].Equals(true))
+            {
+                <div class="text-center text-success">
+                    @TempData["ResponseMessage"]
+                </div>
+                <a asp-action="AddBook" asp-controller="Home" asp-area="Admin" class="text-dark">Add new book</a>
+            }
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <img src="@Url.Content(Model.PictureURL)" alt="@Model.Title" class="book-img-large">
+                    @if (User.IsInRole("User"))
+                    {
+                        <div>
+                            <form asp-action="AddBookToCart" asp-controller="Home" asp-area="User" method="get">
+                                <div class="text-center">
+                                    <input type="hidden" name="id" value="@Model.Id">
+                                    <span>$@Model.Price</span>
+                                    <br />
+                                    @if (Model.Inventory == 0)
+                                    {
+                                        <span class="text-secondary"><em>Currently unavailable</em></span>
+                                    }
+                                    else
+                                    {
+                                        int maxAmount = Model.Inventory > 50 ? 50 : Model.Inventory;
+                                        <label>Amount: </label>
+                                        <input type="number" placeholder="1" name="numberOfCopies" value="1" style="width:70px" min="1" max="@maxAmount">
+                                        <br />
+                                        @if (Model.Inventory < 10)
+                                        {
+                                            <span class="text-danger"><em>Only @Model.Inventory left</em></span>
+                                        }
+
+                                        <br />
+                                        <button type="submit" class="btn form-btn">Add to cart</button>
+                                    }
+                                </div>
+                            </form>
+                        </div>
+                    }
+                </div>
+                <div class="col-md-8">
+                    <h6>@Html.DisplayNameFor(model => model.Description)</h6>
+                    <p>@Html.DisplayFor(model => model.Description)</p>
+                    <h6>@Html.DisplayNameFor(model => model.Language)</h6>
+                    <p>@Html.DisplayFor(model => model.Language)</p>
+                    <h6>@Html.DisplayNameFor(model => model.PublishedYear)</h6>
+                    <p>@Html.DisplayFor(model => model.PublishedYear)</p>
+                    <h6>@Html.DisplayNameFor(model => model.NumberOfPages)</h6>
+                    <p>@Html.DisplayFor(model => model.NumberOfPages)</p>
+                    <h6>@Html.DisplayNameFor(model => model.Genres)</h6>
+                    @{
+                        var genres = string.Join(", ", Model.Genres);
+                    }
+                    <p>@Html.DisplayFor(model => genres)</p>
+                </div>
+            </div>
+            <hr />
+            @if (User.IsInRole("Admin"))
+            {
+                <div>
+                    <span>Price: $@Model.Price</span>
+                    <div class="d-flex flex-row justify-content-center">
+                        @Html.ActionLink("Edit", "EditBook", new { area = "Admin" ,id = Model.Id }, new { @class = "btn form-btn" })
+                        @Html.ActionLink("Delete", "DeleteBook", new { area = "Admin", id = Model.Id }, new { @class = "btn form-btn" })
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

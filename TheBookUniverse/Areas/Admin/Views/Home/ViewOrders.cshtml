@@ -1,0 +1,77 @@
+﻿@using Models.Orders
+@model IEnumerable<OrderModel>
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = ViewBag.Title;
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="row d-flex justify-content-center">
+                <a href="@Url.Action("ShowFilteredOrders", "Home", new { area = "Admin" , isSent = true})" class="btn form-btn orders-btn">Sent orders</a>
+                <a href="@Url.Action("ShowFilteredOrders", "Home", new { area = "Admin", isSent = false })" class="btn form-btn orders-btn">Not sent orders</a>
+                <a href="@Url.Action("ViewAllOrders", "Home", new { area = "Admin" })" class="btn form-btn orders-btn">All orders</a>
+
+                <h3>@ViewBag.Title</h3>
+                <p class="m-0 p-0">Number of orders: @Model.Count()</p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Address
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Price)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.DateCreated)
+                            </th>
+                            <th>
+                                @Html.DisplayNameFor(model => model.Sent)
+                            </th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                @foreach (var item in Model) {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.FirstName)
+                                <br />
+                                @Html.DisplayFor(modelItem => item.LastName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Address)
+                                <br />
+                                @Html.DisplayFor(modelItem => item.City)
+                                <br />
+                                @Html.DisplayFor(modelItem => item.PostalCode)
+                                <br />
+                                @Html.DisplayFor(modelItem => item.Country)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Price)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.DateCreated)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Sent)
+                            </td>
+                            <td>
+                                 @Html.ActionLink("Details", "ViewOrderDetails", new {  id=item.Id  }, new { @class = "text-color-2 fw-bold p-1" } )
+                            </td>
+                        </tr>
+                }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+﻿@using Models.Books
+@model FavoriteBooksModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "ViewMyFavoriteBooks";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="row justify-content-center">
+            <h3>My favorite books</h3>
+            <hr />
+            @if (Model is null || Model.Books.Count == 0)
+            {
+                <h5 class="fst-italic">Your haven't added any favorites yet</h5>
+            }
+            else
+            {
+                <div class="row justify-content-center">
+                    @if (Model is null || Model.Books.Count == 0)
+                    {
+                        <h4>No results</h4>
+                    }
+
+                    @foreach (var book in Model.Books)
+                    {
+                        <div class="d-flex m-1 flex-column book-item">
+                            <div>
+                                <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Id, area = "Common" })">
+                                    <img src="@Url.Content(book.PictureURL)" alt="@book.Title" class=" book-img" style="height: 70%;">
+                                </a>
+                                <span class="text-dark fw-bold font-14">@book.Title</span>
+                                <br />
+                                <span class="fst-italic font-12">@book.AuthorName</span>
+                            </div>
+                            <div class="mt-auto">
+                                <span class="fw-bolder font-12">@("$" + book.Price)</span>
+                                <br />
+
+                                <a asp-action="AddBookToCart" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">
+                                    Add to cart
+                                </a>
+                                <a asp-action="RemoveBookFromFavorites" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">
+                                    Remove favorite
+                                </a>
+
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            </div>
+        </div>
+    </div>
+</div>

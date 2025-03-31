@@ -1,0 +1,130 @@
+﻿@using Models.Orders
+@model OrderModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Order details";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6 col-xl-4 col-11">
+            <div class="row justify-content-center">
+                <form asp-action="BuyBooks" method="post">
+                    @Html.AntiForgeryToken()
+                    <h3>Delivery information</h3>
+                    <hr />
+
+
+                    @if (TempData["ResponseMessage"] is not null && TempData["Response"] is not null && TempData["Response"].Equals(false))
+                    {
+                        <div class="text-center text-danger">
+                            @TempData["ResponseMessage"]
+                        </div>
+                    }
+
+                    <div class="form-check  text-start">
+                        <input class="form-check-input" type="radio" name="deliveryOptionRadio" id="deliverToUser" checked>
+                        <label class="form-check-label" for="deliverToUser">
+                            Use my own information for delivery
+                        </label>
+                    </div>
+                    <div class="form-check  text-start">
+                        <input class="form-check-input" type="radio" name="deliveryOptionRadio" id="deliverToAnother">
+                        <label class="form-check-label" for="deliverToAnother">
+                            Deliver to another person
+                        </label>
+                    </div>
+                    <br />
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @Html.HiddenFor(model => model.Price)
+                    @Html.HiddenFor(model => model.UserBoughtId)
+                    <div class="form-group form-floating">
+                        <input asp-for="FirstName" id="firstName" class="form-control" value="@Model.FirstName" />
+                        <label asp-for="FirstName" class="control-label"></label>
+                        <span asp-validation-for="FirstName" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="LastName" id="lastName" class="form-control" value="@Model.LastName"  />
+                        <label asp-for="LastName" class="control-label"></label>
+                        <span asp-validation-for="LastName" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="Address" id="address" class="form-control" value="@Model.Address"  />
+                        <label asp-for="Address" class="control-label"></label>
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="Email" id="email" class="form-control" value="@Model.Email" />
+                        <label asp-for="Email" class="control-label"></label>
+                        <span asp-validation-for="Email" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="City" id="city" class="form-control" value="@Model.City" />
+                        <label asp-for="City" class="control-label"></label>
+                        <span asp-validation-for="City" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="PostalCode" id="postalCode" class="form-control" value="@Model.PostalCode" />
+                        <label asp-for="PostalCode" class="control-label"></label>
+                        <span asp-validation-for="PostalCode" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <input asp-for="Country" id="country" class="form-control" value="@Model.Country" />
+                        <label asp-for="Country" class="control-label"></label>
+                        <span asp-validation-for="Country" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="text-center">
+                        <h5>Total price: $<span id="totalPrice">@Model.Price</span></h5>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" value="Place order" class="btn form-btn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const deliverToUserRadio = document.getElementById('deliverToUser');
+    const deliverToAnotherRadio = document.getElementById('deliverToAnother');
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastName');
+    const email = document.getElementById('email');
+    const address = document.getElementById('address');
+    const city = document.getElementById('city');
+    const postalCode = document.getElementById('postalCode');
+    const country = document.getElementById('country');
+
+    deliverToUserRadio.addEventListener('click', function(){
+        firstName.value = "@Model.FirstName";
+        lastName.value = "@Model.LastName";
+        email.value = "@Model.Email";
+        address.value = "@Model.Address";
+        city.value = "@Model.City";
+        postalCode.value = "@Model.PostalCode";
+        country.value = "@Model.Country";
+
+    });
+    deliverToAnotherRadio.addEventListener('click', function () {
+        firstName.value = '';
+        lastName.value = '';
+        email.value = '';
+        address.value = '';
+        city.value = '';
+        postalCode.value = '';
+        country.value = '';
+
+    });
+
+</script>

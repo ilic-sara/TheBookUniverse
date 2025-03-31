@@ -1,0 +1,59 @@
+﻿@using Models.Books
+@model BookModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Delete book";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="row">
+                <h3>Are you sure you want to delete this book?</h3>
+                <hr />
+            </div>
+            <div class="row">
+                <h3>@Model.Title</h3>
+                <a class="text-decoration-none" href="@Url.Action("ViewAuthorDetails", "Home", new { id = Model.AuthorId })" title="@Model.AuthorName">
+                    <h6>@Model.AuthorName</h6>
+                </a>
+                <hr />
+                <div class="row mt-4">
+                    <div class="col-md-4">
+                        <img src="@Url.Content(Model.PictureURL)" alt="@Model.Title" class="book-img-large">
+                        <h6>@Html.DisplayNameFor(model => model.Price)</h6>
+                        <p>$@Model.Price</p>
+                        <h6>@Html.DisplayNameFor(model => model.Inventory)</h6>
+                        <p>@Model.Inventory</p>
+                    </div>
+                    <div class="col-md-8">
+                        <h6>@Html.DisplayNameFor(model => model.Description)</h6>
+                        <p>@Html.DisplayFor(model => model.Description)</p>
+                        <h6>@Html.DisplayNameFor(model => model.Language)</h6>
+                        <p>@Html.DisplayFor(model => model.Language)</p>
+                        <h6>@Html.DisplayNameFor(model => model.PublishedYear)</h6>
+                        <p>@Html.DisplayFor(model => model.PublishedYear)</p>
+                        <h6>@Html.DisplayNameFor(model => model.NumberOfPages)</h6>
+                        <p>@Html.DisplayFor(model => model.NumberOfPages)</p>
+                        <h6>@Html.DisplayNameFor(model => model.Genres)</h6>
+                        @{
+                            var genres = string.Join(", ", Model.Genres);
+                        }
+                        <p>@Html.DisplayFor(model => genres)</p>
+                    </div>
+                </div>
+                <hr />
+                <div class="row">
+                    <form asp-action="DeleteBookAction" method="post" class="my-3">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@Model.Id">
+                        <input type="submit" value="Delete" class="btn btn-danger" />
+                        <a href="@Url.Action("GetBooksToDisplay", "Home", new { area = "Common"})" class="btn btn-secondary">Cancel</a>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

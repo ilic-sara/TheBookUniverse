@@ -1,0 +1,57 @@
+﻿@using Models.Authors
+@model AuthorModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Add new author";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-4">
+            <div class="row">
+                <form asp-action="AddAuthor" method="post">
+                    @Html.AntiForgeryToken()
+                    <h3>Add new author</h3>
+                    <hr />
+                    @if (TempData["ResponseMessage"] is not null && TempData["Response"] is not null && TempData["Response"].Equals(false))
+                    {
+                        <div class="text-center text-danger">
+                            @TempData["ResponseMessage"]
+                        </div>
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group form-floating">
+                        <input asp-for="Name" class="form-control" />
+                        <label asp-for="Name" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <textarea rows="7" asp-for="About" class="form-control text-auto"></textarea>
+                        <label asp-for="About" class="control-label text-secondary"></label>
+                        <span asp-validation-for="About" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating">
+                        <textarea rows="4" asp-for="PictureURL" class="form-control text-auto"></textarea>
+                        <label asp-for="PictureURL" class="control-label text-secondary"></label>
+                        <span asp-validation-for="PictureURL" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn form-btn" />
+                        <a href="@Url.Action("ViewAuthors", "Home", new {area = "Common"})" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

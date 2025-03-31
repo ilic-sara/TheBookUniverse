@@ -1,0 +1,107 @@
+﻿@using Models.Admin
+@model FilterOptionsModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Edit filter option";
+}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11 col-md-8 col-lg-6 col-xl-4">
+            <div class="row">
+                <form asp-action="EditFilterOption" method="post">
+                    @Html.AntiForgeryToken()
+                    <h3>Edit filter option</h3>
+                    @if (TempData["ResponseMessage"] is not null && TempData["Response"] is not null)
+                    {
+                        if (TempData["Response"].Equals(false))
+                        {
+                            <div class="text-center text-danger">
+                                @TempData["ResponseMessage"]
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="text-center text-success">
+                                @TempData["ResponseMessage"]
+                            </div>
+                        }
+                    }
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    @Html.HiddenFor(model => model.Id)
+                    <div class="form-group form-floating">
+                        <input asp-for="Name" class="form-control" />
+                        <label asp-for="Name" class="control-label text-secondary"></label>
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <br />
+                    <div class="form-group form-floating" id="values-container">
+                        <div class="form-group input-group" id="added-values">
+                            <label class="control-label text-secondary">Values:</label>
+                            @foreach(var val in Model.Values){
+                                <div class="input-group mb-3">
+                                    <input type="text" name="Values" class="form-control" value="@val">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-danger" type="button" onclick="removeValueField(this)">Remove</button>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" id="value" class="form-control" />
+                            <button class="btn btn-secondary" type="button" onclick="addValueField()">Add value</button>
+
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn form-btn" />
+                        <a href="@Url.Action("ViewFilterOptions")" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function addValueField() {
+        var container = document.getElementById("added-values");
+        var inputGroup = document.createElement("div");
+        inputGroup.className = "input-group mb-3";
+        var oldInputElement = document.getElementById("value");
+        var oldValue = oldInputElement.value;
+        var inputField = document.createElement("input");
+        inputField.type = "text";
+        inputField.name = "Values";
+        inputField.className = "form-control";
+        inputField.value = oldValue;
+        oldInputElement.value = "";
+        var appendDiv = document.createElement("div");
+        appendDiv.className = "input-group-append";
+        var removeButton = document.createElement("button");
+        removeButton.className = "btn btn-danger";
+        removeButton.type = "button";
+        removeButton.textContent = "Remove";
+        removeButton.onclick = function () {
+            container.removeChild(inputGroup);
+        };
+        appendDiv.appendChild(removeButton);
+        inputGroup.appendChild(inputField);
+        inputGroup.appendChild(appendDiv);
+        container.appendChild(inputGroup);
+    }
+
+    function removeValueField(button) {
+        var container = document.getElementById("added-values");
+        var inputGroup = button.closest(".input-group");
+        container.removeChild(inputGroup);
+    }
+</script>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,88 @@
+﻿@using Models.Orders
+@model IEnumerable<OrderModel>
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "My orders";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-sm-10 d-flex justify-content-center mb-2 mx-2">
+            <div class="row">
+                <h3>My orders</h3>
+                @if (Model is null || Model.ToList().Count == 0)
+                {
+                    <hr />
+                    <h5 class="fst-italic">Your haven't ordered anything yet</h5>
+                }
+                else{
+                    foreach (var order in Model)
+                    {
+                        <div class="row text-start border border-1 border-secondary rounded mb-4 p-2 bg-white">
+                            <h5>Date ordered: @order.DateCreated</h5>
+                            <p class="my-0 py-0">Total price: $@order.Price</p>
+                            @if (order.Sent)
+                            {
+                                <p class="my-0 py-0" style="color:green"><strong>Sent</strong></p>
+                            }
+                            else
+                            {
+                                <p class="my-0 py-0" style="color:orange"><strong>Not sent</strong></p>
+                            }
+                            <div class="row m-0 d-flex justify-content-center">
+                                <div class="accordion m-3" id="@order.Id">
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#-@order.Id" aria-expanded="false" aria-controls="-@order.Id">
+                                                Delivery information
+                                            </button>
+                                        </h2>
+                                        <div id="-@order.Id" class="accordion-collapse collapse" data-bs-parent="#@order.Id">
+                                            <div class="accordion-body color-1">
+                                                <p>
+                                                    <strong>Name: </strong>
+                                                    <br />
+                                                    @order.FirstName @order.LastName
+                                                </p>
+                                                <p>
+                                                    <strong>Address: </strong>
+                                                    <br />
+                                                    @order.Address
+                                                    <br />
+                                                    @order.PostalCode @order.City
+                                                    <br />
+                                                    @order.Country
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @foreach (var book in order.Items)
+                            {
+                                <div class="row m-2">
+                                    <div class="col-auto me-2">
+                                        <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Book.Id, area = "Common" })">
+                                            <img src="@Url.Content(book.Book.PictureURL)" alt="@book.Book.Title" class="book-img-xs">
+                                        </a>
+                                    </div>
+                                    <div class="col ms-2">
+                                        <p class="m-0 p-0">@book.Book.Title </p>
+                                        <p class="m-0 p-0">(@book.Book.AuthorName) </p>
+                                        <p class="m-0 p-0">$@book.Book.Price </p>
+                                        <p class="m-0 p-0">Amount: @book.Quantity </p>
+
+                                    </div>
+
+                                </div>
+                            }
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>

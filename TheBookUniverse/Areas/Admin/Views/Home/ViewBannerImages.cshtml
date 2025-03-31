@@ -1,0 +1,51 @@
+﻿@using Models.Admin
+@model IEnumerable<BannerImageModel>
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Banner Images";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-10">
+            <div class="row justify-content-center">
+                <h3>Banner Images</h3>
+                @if(Model.ToList().Count == 0)
+                {
+                    <h5 class="fst-italic">There are 0 banner images saved.</h5>
+                    <a asp-action="AddBannerImage" class="text-color-2">Add new banner image</a>
+                }
+                else{
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Picture
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td class="color-1">
+                                        <img style="height:200px" src="@Url.Content(item.PictureURL)" alt="Image" />
+
+                                    </td>
+                                    <td>
+                                        @Html.ActionLink("Edit", "EditBannerImage", new { id = item.Id }, new { @class = "text-warning text-decoration-none p-2" })
+                                        @Html.ActionLink("Delete", "DeleteBannerImage", new { id = item.Id }, new { @class = "text-danger text-decoration-none p-2" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+                
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,223 @@
+﻿@using Models.Books
+@model BookPageModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "Books";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-11">
+            <div class="row justify-content-center">
+                <h3>Books</h3>
+                <hr />
+    
+                <div class="row">
+                    <div class="row p-1 m-3">
+                        <div class="col-5 col-sm-4 col-md-3 col-lg-2">
+                            <form asp-action="FilterBooks" method="get">
+                                <input type="hidden" asp-for="CurrentPage" />
+                                <input asp-for="SearchQuery" placeholder="Search by title" class="form-control" />
+                                <br />
+                                @foreach (var filter in Model.FilterOptions)
+                                {
+                                    <div class="form-group col text-start">
+                                        <label class="control-label text-dark">@filter.Name</label>
+                                        <div class="border-1 border rounded p-1">
+                                            @if (filter.Name == "Genres")
+                                            {
+                                                @foreach (var item in filter.Values)
+                                                {
+                                                    var isChecked = Model.SelectedGenres is not null && Model.SelectedGenres.Contains(item);
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input border-secondary" type="checkbox" name="SelectedGenres" value="@item" id="@item" @(isChecked ? "checked" : "")>
+                                                        <label class="form-check-label text-secondary" for="@item">
+                                                            @item
+                                                        </label>
+                                                    </div>
+                                                }
+                                            }
+                                            @if (filter.Name == "Languages")
+                                            {
+                                                @foreach (var item in filter.Values)
+                                                {
+                                                    var isChecked = Model.SelectedLanguages is not null && Model.SelectedLanguages.Contains(item);
+
+                                                    <div class="form-check">
+                                                        <input class="form-check-input border-secondary" type="checkbox" name="SelectedLanguages" value="@item" id="@item" @(isChecked ? "checked" : "")>
+                                                        <label class="form-check-label text-secondary" for="@item">
+                                                            @item
+                                                        </label>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                    <br />
+                                }
+                                <div class="form-group col text-start">
+                                    <label class="control-label text-dark">Published year</label>
+                                    <div class="input-group mb-3">
+                                        @{
+                                            var currentYear = DateTime.Now.Year;
+                                        }
+                                        <input type="number" class="form-control no-spin-buttons" placeholder="From" name="YearFrom" value="@Model.YearFrom" min="0" max="@currentYear">
+                                        <span class="input-group-text"> - </span>
+                                        <input type="number" class="form-control no-spin-buttons" placeholder="To" name="YearTo" value="@Model.YearTo" min="0" max="@currentYear">
+                                    </div>
+                                </div>
+                                <div class="form-group col text-start">
+                                    <label class="control-label text-dark">Price</label>
+                                    <div class="input-group mb-3">
+                                        <input type="number" class="form-control no-spin-buttons" placeholder="From" name="PriceFrom" value="@Model.PriceFrom" min="0" max="1000">
+                                        <span class="input-group-text"> - </span>
+                                        <input type="number" class="form-control no-spin-buttons" placeholder="To" name="PriceTo" value="@Model.PriceTo" min="0" max="1000">
+                                    </div>
+                                </div>
+                                <br />
+                                <div class="form-group ">
+                                    <input type="submit" value="FilterBooks" class="btn form-btn" />
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-7 col-sm-8 col-md-9 col-lg-10">
+                            <div class="row justify-content-center">
+                                @foreach (var book in Model.Books)
+                                {
+                                    <div class="d-flex m-2 flex-column book-item">
+                                        <div>
+                                            <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Id })" title="@book.Title">
+                                                <img src="@Url.Content(book.PictureURL)" alt="@book.Title" class=" book-img">
+                                            </a>
+                                            <span class="text-dark fw-bold font-14">@book.Title</span>
+                                            <br />
+                                            <a class="text-decoration-none text-dark" href="@Url.Action("ViewAuthorDetails", "Home", new { id = book.AuthorId })" title="@book.AuthorName">
+                                                <span class="fst-italic font-12">@book.AuthorName</span>
+                                            </a>
+                                        </div>
+                                        <div class="mt-auto">
+                                            <span class="fw-bolder font-12">@("$" + book.Price)</span>
+                                            <br />
+                                            @if (User.IsInRole("User"))
+                                            {
+                                                if(book.Inventory == 0)
+                                                {
+                                                    <span class="text-secondary"><em>Currently unavailable</em></span>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row justify-content-center">
+                                                        <a asp-action="AddBookToCart" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" asp-route-numberOfCopies="1"
+                                                           class="action-btn">
+                                                            Add to cart
+                                                        </a>
+                                                        <a asp-action="AddBookToFavorites" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">
+                                                            Add to favorites
+                                                        </a>
+                                                    </div>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @{
+                    Func<int, string> pageUrl = pageIndex => Url.Action("FilterBooks", new
+                    {
+                        SearchQuery = Model.SearchQuery,
+                        SelectedGenres = Model.SelectedGenres,
+                        SelectedLanguages = Model.SelectedLanguages,
+                        YearFrom = Model.YearFrom,
+                        YearTo = Model.YearTo,
+                        PriceFrom = Model.PriceFrom,
+                        PriceTo = Model.PriceTo,
+                        startIndex = pageIndex
+                    });
+                }
+                <div class="text-center mb-5">
+                    @if(Model.TotalNumberOfBooks > Model.NumberOfBooksToDisplayPerPage)
+                    {
+                        int numberOfPages = (int)Math.Ceiling((decimal)Model.TotalNumberOfBooks / Model.NumberOfBooksToDisplayPerPage);
+                        if (numberOfPages <= 5)
+                        {
+                            for (int i = 1; i <= 5; i++)
+                            {
+                                if (Model.CurrentPage == i)
+                                {
+                                    <a href="@pageUrl(i)" class="btn btn-dark btn-sm">@i</a>
+                                }
+                                else
+                                {
+                                    <a href="@pageUrl(i)" class="btn btn-secondary btn-sm">@i</a>
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if(Model.CurrentPage < 4)
+                            {
+
+                                for (int i = 1; i < 5; i++)
+                                {
+                                    if (Model.CurrentPage == i)
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-dark btn-sm">@i</a>
+                                    }
+                                    else
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-secondary btn-sm">@i</a>
+                                    }
+                                }
+                                <span> ... </span>
+                                <a href="@pageUrl((int)numberOfPages)" class="btn btn-secondary btn-sm">@(numberOfPages)</a>
+                            }
+                            else if(Model.CurrentPage >= numberOfPages - 2)
+                            {
+                                <a href="@pageUrl(1)" class="btn btn-secondary btn-sm">1</a>
+                                <span> ... </span>
+                                for (int i = (numberOfPages - 3); i <= numberOfPages; i++)
+                                {
+                                    if (Model.CurrentPage == i)
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-dark btn-sm">@i</a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-secondary btn-sm">@i</a>
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                <a href="@pageUrl(1)" class="btn btn-secondary btn-sm">1</a>
+                                <span> ... </span>
+                                for (int i = (Model.CurrentPage - 1); i <= Model.CurrentPage + 1; i++)
+                                {
+                                    if (Model.CurrentPage == i)
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-dark btn-sm">@i</a>
+
+                                    }
+                                    else
+                                    {
+                                        <a href="@pageUrl(i)" class="btn btn-secondary btn-sm">@i</a>
+                                    }
+                                }
+                                <span> ... </span>
+                                <a href="@pageUrl((int)numberOfPages)" class="btn btn-secondary btn-sm">@(numberOfPages)</a>
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

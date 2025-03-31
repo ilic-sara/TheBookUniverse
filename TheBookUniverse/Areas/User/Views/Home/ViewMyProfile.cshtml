@@ -1,0 +1,70 @@
+﻿@using Models.Users
+@model MyProfileModel
+@{
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "My profile";
+}
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-xl-4 col-lg-6 col-md-8 col-sm-10">
+            <h3>My Profile</h3>
+            <hr />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="FirstName" class="form-control" disabled />
+                <label asp-for="FirstName" class="control-label mx-2"></label>
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="LastName" class="form-control" disabled />
+                <label asp-for="LastName" class="control-label mx-2"></label>
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="UserName" class="form-control" disabled />
+                <label asp-for="UserName" class="control-label mx-2"></label>
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="@Model.Email" class="form-control" disabled />
+                <label asp-for="Email" class="control-label mx-2"></label>
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="Address" class="form-control" disabled />
+                <label asp-for="Address" class="control-label mx-2"></label>
+                <span asp-validation-for="Address" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="City" class="form-control" disabled />
+                <label asp-for="City" class="control-label mx-2"></label>
+                <span asp-validation-for="City" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating mt-2">
+                <input asp-for="PostalCode" class="form-control" disabled />
+                <label asp-for="PostalCode" class="control-label mx-2"></label>
+                <span asp-validation-for="PostalCode" class="text-danger"></span>
+            </div>
+            <br />
+            <div class="form-group form-floating my-2">
+                <input asp-for="Country" class="form-control" disabled />
+                <label asp-for="Country" class="control-label mx-2"></label>
+                <span asp-validation-for="Country" class="text-danger"></span>
+            </div>
+            <br />
+            <div>
+                <form action="EditMyProfile" method="get">
+                    <button class="btn form-btn" asp-action="EditMyProfile" value="@Model.Id">Edit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
