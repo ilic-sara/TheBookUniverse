@@ -332,23 +332,11 @@ color: #C0A9BD !important;}
 .text-start {
 }
 
-.slick-prev:before,
-.slick-next:before {
-    color: #C0A9BD !important;
-}
 
 .book-actions{
     margin-top:auto !important;
 }
 
-.slick-track {
-    display: flex !important;
-    justify-content:center;
-}
-
-.slick-slide {
-    height: inherit !important;
-}
 
 #books-outer {
     display: flex;

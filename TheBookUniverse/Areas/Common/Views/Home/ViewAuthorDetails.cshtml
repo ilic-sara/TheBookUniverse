@@ -38,45 +38,51 @@
                         }
                     else{
                         <h4 class="bg-dark text-color-1 p-1">Books</h4>
-                        <div class="slider">
+                        <div class="swiper mySwiper">
+                            <div class="swiper-wrapper">
                             @foreach (var book in Model.Books)
                             {
-                                <div class="d-flex m-2 flex-column book-item">
-                                    <div>
-                                        <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Id })" title="@book.Title">
-                                            <img src="@Url.Content(book.PictureURL)" alt="@book.Title" class=" book-img">
-                                        </a>
-                                        <span class="text-dark fw-bold font-14">@book.Title</span>
-                                        <br />
-                                        <a class="text-decoration-none text-dark" href="@Url.Action("ViewAuthorDetails", "Home", new { id = book.AuthorId })" title="@book.AuthorName">
-                                            <span class="fst-italic font-12">@book.AuthorName</span>
-                                        </a>
-                                    </div>
-                                    <div class="mt-auto">
-                                        <span class="fw-bolder font-12">@("$" + book.Price)</span>
-                                        <br />
-                                        @if (User.IsInRole("User"))
-                                        {
-                                            if (book.Inventory == 0)
+                                <div class="swiper-slide m-0">
+                                    <div class="d-flex m-2 flex-column book-item">
+                                        <div>
+                                            <a href="@Url.Action("ViewBookDetails", "Home", new { id = book.Id })" title="@book.Title">
+                                                <img src="@Url.Content(book.PictureURL)" alt="@book.Title" class=" book-img">
+                                            </a>
+                                            <span class="text-dark fw-bold font-14">@book.Title</span>
+                                            <br />
+                                            <a class="text-decoration-none text-dark" href="@Url.Action("ViewAuthorDetails", "Home", new { id = book.AuthorId })" title="@book.AuthorName">
+                                                <span class="fst-italic font-12">@book.AuthorName</span>
+                                            </a>
+                                        </div>
+                                        <div class="mt-auto">
+                                            <span class="fw-bolder font-12">@("$" + book.Price)</span>
+                                            <br />
+                                            @if (User.IsInRole("User"))
                                             {
-                                                <span class="text-secondary"><em>Currently unavailable</em></span>
+                                                if (book.Inventory == 0)
+                                                {
+                                                    <span class="text-secondary"><em>Currently unavailable</em></span>
+                                                }
+                                                else
+                                                {
+                                                    <div class="row justify-content-center">
+                                                        <a asp-action="AddBookToCart" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" asp-route-numberOfCopies="1" 
+                                                                   class="action-btn">
+                                                            Add to cart
+                                                        </a>
+                                                        <a asp-action="AddBookToFavorites" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">
+                                                            Add to favorites
+                                                        </a>
+                                                    </div>
+                                                }
                                             }
-                                            else
-                                            {
-                                                <div class="row justify-content-center">
-                                                    <a asp-action="AddBookToCart" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" asp-route-numberOfCopies="1" 
-                                                               class="action-btn">
-                                                        Add to cart
-                                                    </a>
-                                                    <a asp-action="AddBookToFavorites" asp-controller="Home" asp-area="User" asp-route-id="@book.Id" class="action-btn">
-                                                        Add to favorites
-                                                    </a>
-                                                </div>
-                                            }
-                                        }
+                                        </div>
                                     </div>
                                 </div>
                             }
+                            </div>
+                            <div class="swiper-button-next"></div>
+                            <div class="swiper-button-prev"></div>
                         </div>
                     }
                 </div>
@@ -89,45 +95,56 @@
             </div>
         </div>
     </div>
+    <style>
+        .mySwiper {
+            width: 100%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        .swiper-button-prev,
+        .swiper-button-next {
+            color: #C0A9BD !important;
+            width: 30px;
+            height: 30px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 6px rgba(0, 0, 0, 0.1);
+        }
+
+            .swiper-button-prev::after,
+            .swiper-button-next::after {
+                font-size: 16px !important;
+                font-weight: bold;
+            }
+    </style>
 </div>
 
 @section Scripts {
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('.slider').each(function () {
-                $(this).slick({
-                    slidesToShow: 5,
-                    slidesToScroll: 1,
-                    arrows: true,
-                    dots: false,
-                    infinite: true,
-                    speed: 300,
-                    prevArrow: "<button type='button' class='slick-prev'>Previous</button>",
-                    nextArrow: "<button type='button' class='slick-next'>Next</button>",
-                    responsive: [
-                        {
-                            breakpoint: 1024,
-                            settings: {
-                                slidesToShow: 3,
-                                slidesToScroll: 1,
-                                infinite: true,
-                            }
-                        },
-                        {
-                            breakpoint: 600,
-                            settings: {
-                                slidesToShow: 2, // Number of slides to show for tablets
-                                slidesToScroll: 1
-                            }
-                        },
-                        {
-                            breakpoint: 480,
-                            settings: {
-                                slidesToShow: 1, // Number of slides to show for mobile
-                                slidesToScroll: 1
-                            }
-                        }
-                    ]
+    <script>
+        window.addEventListener("load", function () {
+            document.querySelectorAll('.mySwiper').forEach(function (el) {
+                new Swiper(el, {
+                    slidesPerView: 1,
+                    slidesPerGroup: 1,
+                    spaceBetween: 0,
+                    navigation: {
+                        nextEl: el.querySelector('.swiper-button-next'),
+                        prevEl: el.querySelector('.swiper-button-prev'),
+                    },
+                    breakpoints: {
+                        1200: { slidesPerView: 5, slidesPerGroup: 1 },
+                        1024: { slidesPerView: 4, slidesPerGroup: 1 },
+                        700: { slidesPerView: 3, slidesPerGroup: 1 },
+                        500: { slidesPerView: 2, slidesPerGroup: 1 }
+                    }
                 });
             });
         });
