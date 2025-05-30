@@ -6,6 +6,8 @@ The application follows clean architecture principles — separating concerns ac
 
 Authentication and authorization are handled via ASP.NET Identity, supporting secure login, role management, and cookie-based sessions.
 
+https://thebookuniverseapp-d0ewdudcdxhwf3de.swedencentral-01.azurewebsites.net/
+
 # Features
 
 - Browse books and authors with various filters
