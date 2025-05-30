@@ -35,7 +35,18 @@ builder.Services.AddTransient<IBookCommentRepository, BookCommentRepository>();
 builder.Services.AddTransient<IBookCommentService, BookCommentService>();
 builder.Services.AddTransient<IFilterOptionsRepository, FilterOptionsRepository>();
 builder.Services.AddTransient<IFilterOptionsService, FilterOptionsService>();
-builder.Services.AddSingleton<IMongoClient, MongoClient>();
+
+builder.Services.AddSingleton<IMongoClient>(sp =>
+{
+    var configuration = sp.GetRequiredService<IConfiguration>();
+    var settings = MongoClientSettings.FromConnectionString(configuration["MongoSettings:Connection"]);
+    settings.RetryWrites = true;
+    settings.ReadConcern = ReadConcern.Majority;
+    settings.WriteConcern = WriteConcern.WMajority;
+    settings.ReadPreference = ReadPreference.Primary;
+    return new MongoClient(settings);
+});
+
 
 #region Identity services
 
