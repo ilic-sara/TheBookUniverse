@@ -23,54 +23,64 @@
                 </div>
                 <a asp-action="AddBook" asp-controller="Home" asp-area="Admin" class="text-dark">Add new book</a>
             }
-            <div class="row mt-4">
-                <div class="col-md-4">
-                    <img src="@Url.Content(Model.PictureURL)" alt="@Model.Title" class="book-img-large">
-                    @if (User.IsInRole("User"))
-                    {
-                        <div>
-                            <form asp-action="AddBookToCart" asp-controller="Home" asp-area="User" method="get">
-                                <div class="text-center">
-                                    <input type="hidden" name="id" value="@Model.Id">
-                                    <span>$@Model.Price</span>
-                                    <br />
-                                    @if (Model.Inventory == 0)
-                                    {
-                                        <span class="text-secondary"><em>Currently unavailable</em></span>
-                                    }
-                                    else
-                                    {
-                                        int maxAmount = Model.Inventory > 50 ? 50 : Model.Inventory;
-                                        <label>Amount: </label>
-                                        <input type="number" placeholder="1" name="numberOfCopies" value="1" style="width:70px" min="1" max="@maxAmount">
+            <div class="row justify-content-center mt-4">
+                <div class="col-12 col-sm-5 col-md-4 col-lg-3 d-flex justify-content-center">
+                        <img src="@Url.Content(Model.PictureURL)" alt="@Model.Title" class="book-img-large">
+                        @if (User.IsInRole("User"))
+                        {
+                            <div>
+                                <form asp-action="AddBookToCart" asp-controller="Home" asp-area="User" method="get">
+                                    <div class="text-center">
+                                        <input type="hidden" name="id" value="@Model.Id">
+                                        <span>$@Model.Price</span>
                                         <br />
-                                        @if (Model.Inventory < 10)
+                                        @if (Model.Inventory == 0)
                                         {
-                                            <span class="text-danger"><em>Only @Model.Inventory left</em></span>
+                                            <span class="text-secondary"><em>Currently unavailable</em></span>
                                         }
+                                        else
+                                        {
+                                            int maxAmount = Model.Inventory > 50 ? 50 : Model.Inventory;
+                                            <label>Amount: </label>
+                                            <input type="number" placeholder="1" name="numberOfCopies" value="1" style="width:70px" min="1" max="@maxAmount">
+                                            <br />
+                                            @if (Model.Inventory < 10)
+                                            {
+                                                <span class="text-danger"><em>Only @Model.Inventory left</em></span>
+                                            }
 
-                                        <br />
-                                        <button type="submit" class="btn form-btn">Add to cart</button>
-                                    }
-                                </div>
-                            </form>
-                        </div>
-                    }
-                </div>
-                <div class="col-md-8">
-                    <h6>@Html.DisplayNameFor(model => model.Description)</h6>
-                    <p>@Html.DisplayFor(model => model.Description)</p>
-                    <h6>@Html.DisplayNameFor(model => model.Language)</h6>
-                    <p>@Html.DisplayFor(model => model.Language)</p>
-                    <h6>@Html.DisplayNameFor(model => model.PublishedYear)</h6>
-                    <p>@Html.DisplayFor(model => model.PublishedYear)</p>
-                    <h6>@Html.DisplayNameFor(model => model.NumberOfPages)</h6>
-                    <p>@Html.DisplayFor(model => model.NumberOfPages)</p>
-                    <h6>@Html.DisplayNameFor(model => model.Genres)</h6>
-                    @{
-                        var genres = string.Join(", ", Model.Genres);
-                    }
-                    <p>@Html.DisplayFor(model => genres)</p>
+                                            <br />
+                                            <button type="submit" class="btn form-btn">Add to cart</button>
+                                        }
+                                    </div>
+                                </form>
+                            </div>
+                        }
+                    </div>
+                <div class="col-12 col-sm-6 col-md-7 col-lg-8 d-flex justify-content-center">
+                        <p class="justify-text ms-1">@Html.DisplayFor(model => model.Description)</p>
+                    </div>
+                    
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-5">
+                        <h6>@Html.DisplayNameFor(model => model.Language)</h6>
+                        <p>@Html.DisplayFor(model => model.Language)</p>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <h6>@Html.DisplayNameFor(model => model.PublishedYear)</h6>
+                        <p>@Html.DisplayFor(model => model.PublishedYear)</p>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <h6>@Html.DisplayNameFor(model => model.NumberOfPages)</h6>
+                        <p>@Html.DisplayFor(model => model.NumberOfPages)</p>
+                    </div>
+                    <div class="col-12 col-md-5">
+                        <h6>@Html.DisplayNameFor(model => model.Genres)</h6>
+                        @{
+                            var genres = string.Join(", ", Model.Genres);
+                        }
+                        <p>@Html.DisplayFor(model => genres)</p>
+                    </div>
                 </div>
             </div>
             <hr />

@@ -377,4 +377,8 @@ color: #C0A9BD !important;}
     display: block;
     background-color: white;
 
-}  
+}
+
+.justify-text {
+    text-align: justify;
+}

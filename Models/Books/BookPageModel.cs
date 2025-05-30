@@ -14,7 +14,7 @@ namespace Models.Books
         public int? YearTo { get; set; }
         public int? PriceFrom { get; set; }
         public int? PriceTo { get; set; }
-        public int NumberOfBooksToDisplayPerPage { get; set; } = 5;
+        public int NumberOfBooksToDisplayPerPage { get; set; } = 10;
         public int CurrentPage { get; set; } = 1;
     }
 }

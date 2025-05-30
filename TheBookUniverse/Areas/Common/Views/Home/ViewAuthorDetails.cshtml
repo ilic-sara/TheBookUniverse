@@ -10,7 +10,7 @@
 <div class="container-fluid">
     <div class="row justify-content-center">
         <div class="col-11">
-            <div class="row">
+            <div class="row justify-content-center">
                 <h3> @Html.DisplayFor(model => model.Name)</h3>
                 <hr />
                 @if (User.IsInRole("Admin") && TempData["ResponseMessage"] is not null && TempData["Response"] is not null && TempData["Response"].Equals(true))
@@ -20,11 +20,15 @@
                     </div>
                     <a asp-action="AddAuthor" asp-controller="Home" asp-area="Admin" class="text-color-2">Add new author</a>
                 }
-                <div>
-                    <img src="@Url.Content(Model.PictureURL)" alt="@Model.Name" class="author-img-large">
-                    <p class="text-start">
-                        @Html.DisplayFor(model => model.About)
-                    </p>
+                <div class="row justify-content-center">
+                    <div class="col-12 col-sm-5 col-md-4 col-lg-3 d-flex justify-content-center">
+                        <img src="@Url.Content(Model.PictureURL)" alt="@Model.Name" class="author-img-large">
+                    </div>
+                    <div class="col-12 col-sm-6 col-md-7 col-lg-8 d-flex justify-content-center">
+                        <p class="justify-text">
+                            @Html.DisplayFor(model => model.About)
+                        </p>
+                    </div>
                 </div>
                 <div class="row">
                     @if (Model.Books is null || Model.Books.Count == 0)
